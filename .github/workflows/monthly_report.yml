@@ -1,0 +1,39 @@
+name: Monthly AI to Confluence
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC
+    # We will filter for the second Sunday in the job steps
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual triggering for testing
+
+jobs:
+  ai-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if second Sunday
+        id: check_date
+        run: |
+          DAY=$(date +%d)
+          if [[ $DAY -ge 8 && $DAY -le 14 ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "is_second_sunday=true" >> $GITHUB_ENV
+          else
+            echo "is_second_sunday=false" >> $GITHUB_ENV
+            echo "Today is day $DAY, not the second Sunday (days 8-14). Skipping execution."
+          fi
+
+      - name: Run AI to Confluence script
+        if: env.is_second_sunday == 'true'
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CONFLUENCE_DOMAIN: ${{ secrets.CONFLUENCE_DOMAIN }}
+          CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+          AI_PROMPT: "Provide a monthly summary of technology trends for our internal wiki."
+        run: |
+          chmod +x scripts/ai_to_confluence.sh
+          ./scripts/ai_to_confluence.sh
