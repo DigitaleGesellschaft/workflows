@@ -18,15 +18,15 @@ jobs:
         id: check_date
         run: |
           DAY=$(date +%d)
-          if [[ $DAY -ge 8 && $DAY -le 14 ]] || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          if [[ $DAY -ge 8 && $DAY -le 14 ]]; then
             echo "is_second_sunday=true" >> $GITHUB_ENV
           else
             echo "is_second_sunday=false" >> $GITHUB_ENV
-            echo "Today is day $DAY, not the second Sunday (days 8-14). Skipping execution."
+            echo "Today is day $DAY, not the second Sunday (days 8-14)."
           fi
 
       - name: Run AI to Confluence script
-        if: env.is_second_sunday == 'true'
+        if: env.is_second_sunday == 'true' || github.event_name == 'workflow_dispatch'
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           CONFLUENCE_DOMAIN: ${{ secrets.CONFLUENCE_DOMAIN }}
