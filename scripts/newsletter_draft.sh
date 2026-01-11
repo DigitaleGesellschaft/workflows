@@ -82,14 +82,12 @@ echo "Creating Confluence page: $TITLE"
 # Call Confluence API
 CONFLUENCE_PAYLOAD=$(jq -n \
   --arg title "$TITLE" \
-  --arg desc "Newsletter-Entwurf generiert durch OpenRouter-Modell \`${OPENROUTER_MODEL}\`." \
   --arg space_key "$CONFLUENCE_SPACE_KEY" \
   --arg ancestor_id "$CONFLUENCE_ANCESTOR_ID" \
   --arg val "$BODY_HTML" \
   '{
      type: "page",
      title: $title,
-     description: $desc,
      space: {
        key: $space_key
      },
