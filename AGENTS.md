@@ -1,0 +1,1 @@
+- Adhere to the Conventional Commits specification when writing Git commit messages.
