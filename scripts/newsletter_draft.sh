@@ -45,11 +45,8 @@ echo "Successfully received content from AI."
 DATE=$(date +"%Y-%m-%d")
 TITLE="«Update» $DATE"
 
-# Convert markdown to basic HTML for Confluence (Storage format)
-# This is a very simple conversion for the sake of the script.
-# For better results, a dedicated tool like pandoc would be better, but we'll stick to simple wrapper.
-BODY_HTML="<p>$(echo "$CONTENT" | sed ':a;N;$!ba;s/
-/<br\/>/g' | sed 's/"/"/g')</p>"
+# Convert markdown to HTML for Confluence using Pandoc
+BODY_HTML=$(echo "$CONTENT" | pandoc -f markdown -t html --wrap=none)
 
 echo "Creating Confluence page: $TITLE"
 
