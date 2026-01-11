@@ -38,7 +38,7 @@ if [ -z "$CONTENT" ] || [ "$CONTENT" == "null" ]; then
   exit 1
 fi
 
-echo "Successfully received content from AI."
+echo "Successfully received content from OpenRouter."
 
 # Prepare Confluence page
 DATE=$(date +"%Y-%m-%d")
