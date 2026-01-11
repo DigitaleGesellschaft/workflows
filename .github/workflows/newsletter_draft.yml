@@ -1,4 +1,4 @@
-name: Monthly AI to Confluence
+name: Write newsletter draft to Confluence wiki
 
 on:
   schedule:
