@@ -42,6 +42,7 @@ jobs:
         if: env.is_second_sunday == 'true' || github.event_name == 'workflow_dispatch'
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CONFLUENCE_SPACE_KEY: "GES"
           CONFLUENCE_ANCESTOR_ID: "5570588"
           CONFLUENCE_HOST: "https://wiki.digitale-gesellschaft.ch"
           CONFLUENCE_PAT: ${{ secrets.CONFLUENCE_PAT }}
