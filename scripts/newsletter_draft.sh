@@ -7,9 +7,9 @@
 # - OPENROUTER_API_KEY
 # - OPENROUTER_MODEL (optional)
 # - OPENROUTER_PROMPT
-# - CONFLUENCE_API_TOKEN
-# - CONFLUENCE_DOMAIN
-# - CONFLUENCE_SPACE_KEY
+# - CONFLUENCE_ANCESTOR_ID 
+# - CONFLUENCE_HOST
+# - CONFLUENCE_PAT
 
 set -euo pipefail
 
@@ -48,13 +48,13 @@ BODY_HTML=$(echo "$CONTENT" | pandoc -f markdown -t html --wrap=none)
 echo "Creating Confluence page: $TITLE"
 
 # Call Confluence API
-CREATE_PAGE_RESPONSE=$(curl -s -X POST "https://${CONFLUENCE_DOMAIN}/rest/api/content" \
-  -H "Authorization: Bearer $CONFLUENCE_API_TOKEN" \
+CREATE_PAGE_RESPONSE=$(curl -s -X POST "https://${CONFLUENCE_HOST}/rest/api/content" \
+  -H "Authorization: Bearer $CONFLUENCE_PAT" \
   -H "Content-Type: application/json" \
   -d '{
     "type": "page",
     "title": '"$TITLE"',
-    "space": {"key": '"$CONFLUENCE_SPACE_KEY"'},
+    "ancestors": [{"id": '"$CONFLUENCE_ANCESTOR_ID"'}],
     "body": {
       "storage": {
         "value": '"$BODY_HTML"',
