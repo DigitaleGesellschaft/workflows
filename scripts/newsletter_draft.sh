@@ -9,7 +9,6 @@
 # - OPENROUTER_PROMPT
 # - CONFLUENCE_API_TOKEN
 # - CONFLUENCE_DOMAIN
-# - CONFLUENCE_EMAIL
 # - CONFLUENCE_SPACE_KEY
 
 set -euo pipefail
@@ -48,10 +47,9 @@ BODY_HTML=$(echo "$CONTENT" | pandoc -f markdown -t html --wrap=none)
 
 echo "Creating Confluence page: $TITLE"
 
-# Call Confluence API (using Basic Auth)
-AUTH=$(echo -n "$CONFLUENCE_EMAIL:$CONFLUENCE_API_TOKEN" | base64)
+# Call Confluence API
 CREATE_PAGE_RESPONSE=$(curl -s -X POST "https://${CONFLUENCE_DOMAIN}/rest/api/content" \
-  -H "Authorization: Basic $AUTH" \
+  -H "Authorization: Bearer $CONFLUENCE_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "type": "page",
