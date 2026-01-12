@@ -21,4 +21,4 @@ In your GitHub repository, go to **Settings** > **Secrets and variables** > **Ac
 - The workflow is defined in [`.github/workflows/newsletter_draft.yml`](.github/workflows/newsletter_draft.yml).
 - It executes the Bash script [`scripts/newsletter_draft.sh`](scripts/newsletter_draft.sh).
 - It uses a cron schedule [`0 0 * * 3`](.github/workflows/newsletter_draft.yml#L7) (every Wednesday) and then filters for the second Wednesday (days 8-14 of the month).
-- It can be manually triggered from the **Actions** tab in GitHub (e.g. for testing).
+- It can be manually triggered from the [**Actions** tab](https://github.com/DigitaleGesellschaft/workflows/actions/workflows/newsletter_draft.yml) in GitHub (e.g. for testing).
