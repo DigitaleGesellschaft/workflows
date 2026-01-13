@@ -99,7 +99,7 @@ CONFLUENCE_PAYLOAD=$(jq -n \
      }
    }')
 CONFLUENCE_HOST="${CONFLUENCE_HOST%/}"
-CONFLUENCE_RESPONSE=$(curl -s -X POST "${CONFLUENCE_HOST}/rest/api/content" \
+CONFLUENCE_RESPONSE=$(curl -s -L -X POST "${CONFLUENCE_HOST}/rest/api/content" \
   -H "Authorization: Bearer $CONFLUENCE_PAT" \
   -H "Content-Type: application/json" \
   -d "$CONFLUENCE_PAYLOAD")
