@@ -4,6 +4,8 @@
 #
 # Required environment variables:
 #
+# - ARTICLE_LINKS (optional, auto-fetched by default)
+# - NEWSLETTER_LINKS (optional, auto-fetched by default)
 # - OPENROUTER_API_KEY
 # - OPENROUTER_MODEL (optional)
 # - OPENROUTER_PROMPT (optional)
@@ -14,8 +16,8 @@
 
 set -euo pipefail
 
-# Get relevant Blog article links
-ARTICLE_LINKS="$(
+# Get relevant Blog post links
+ARTICLE_LINKS="${ARTICLE_LINKS:-$(
   (
     echo '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/"><channel>'
     page=1
@@ -33,13 +35,13 @@ ARTICLE_LINKS="$(
     xee xpath "string-join(//item[category='Newsletter'][1]/preceding-sibling::item[not(category='Zmittag')]/link, ' ')" | \
     xargs -d '"' echo | \
     xargs -n1
-)"
-NEWSLETTER_LINKS="$(
+)}"
+NEWSLETTER_LINKS="${NEWSLETTER_LINKS:-$(
   curl -s -L -A "Mozilla/5.0" https://www.digitale-gesellschaft.ch/feed/?tag=newsletter | \
     xee xpath "string-join(//item/link, ' ')" | \
     xargs -d '"' echo | \
     xargs -n1
-)"
+)}"
 
 # Call OpenRouter API
 OPENROUTER_MODEL="${OPENROUTER_MODEL:-"z-ai/glm-4.5-air:free"}"
