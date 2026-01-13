@@ -14,3 +14,6 @@ Thumbs.db
 
 # JS packages
 node_modules
+
+# sensitive stuff
+.env

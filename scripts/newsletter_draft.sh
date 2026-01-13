@@ -16,7 +16,19 @@
 
 set -euo pipefail
 
-# Get relevant Blog post links
+# Load static defaults from config.env (if it exists)
+# WARNING: Multiline values (with quoted newlines) are not supported
+CONFIG_PATH="$(dirname "$0")/../config.env"
+if [ -f "$CONFIG_PATH" ]; then
+  while read -r line || [ -n "$line" ]; do
+    if [[ "$line" =~ ^([a-zA-Z_][a-zA-Z0-9_]*)= ]]; then
+      key="${BASH_REMATCH[1]}"      
+      [ -z "${!key+x}" ] && eval "$line"
+    fi
+  done < "$CONFIG_PATH"
+fi
+
+# Get relevant Blog post links and append them to `OPENROUTER_PROMPT`
 ARTICLE_LINKS="${ARTICLE_LINKS:-$(
   (
     echo '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/"><channel>'
@@ -42,12 +54,9 @@ NEWSLETTER_LINKS="${NEWSLETTER_LINKS:-$(
     xargs -d '"' echo | \
     xargs -n1
 )}"
-
-# Call OpenRouter API
-OPENROUTER_MODEL="${OPENROUTER_MODEL:-"z-ai/glm-4.5-air:free"}"
-OPENROUTER_PROMPT="${OPENROUTER_PROMPT:-"Du unterstützt die Redaktion der Digitalen Gesellschaft Schweiz bei der Erstellung ihres monatlichen Newsletters. Du erhälst eine Liste von Artikellinks und rufst diese selbständig auf, um deren Inhalt zu erfassen. Für jeden Link erstellst du genau einen Abschnitt mit 1–2 (maximal 3) Absätzen aus insgesamt 3–6 Sätzen. Jeder Abschnitt fasst den Inhalt zusammen, erklärt den Kontext und lädt zur weiteren Lektüre ein. Am Ende jedes Abschnitts wird der jeweilige Artikellink angefügt. Du fasst mehrere Artikel thematisch zu einem gemeinsamen Abschnitt zusammen, wenn sie eng zusammenhängen (dasselbe Thema/Gerichtsverfahren/Ereignis). Der Stil orientiert sich an den bestehenden Newslettern der Digitalen Gesellschaft (siehe Abschnitt *Letzte 10 Newsletter*): sachlich, verständlich und engagiert, mit einem zivilgesellschaftlichen, grundrechtsorientierten Ton. Du schreibst in Markdown-Syntax (ohne Emojis). Du achtest auf sprachliche Klarheit, vermeidest Werbesprache und übertriebene Zuspitzungen und bleibst kritisch gegenüber Machtmissbrauch, Überwachung und Datenschutzverletzungen. Wenn ein Artikel nicht abrufbar ist, fügst du einen Platzhalter-Abschnitt mit genauer Fehlermeldung ein. Du nutzt direkten Webzugriff, um Inhalte zu prüfen und korrekt wiederzugeben."}"
 OPENROUTER_PROMPT+=$'\n\n# Artikellinks\n\n'"$ARTICLE_LINKS"$'\n\n# Letzte 10 Newsletter\n\n'"$NEWSLETTER_LINKS"
 
+# Call OpenRouter API
 echo "Fetching response from OpenRouter..."
 
 OPENROUTER_PAYLOAD=$(jq -n \
