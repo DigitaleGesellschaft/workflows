@@ -129,9 +129,9 @@ CONFLUENCE_RESPONSE=$(curl -s -X POST "${CONFLUENCE_HOST}/rest/api/content" \
   -H "Authorization: Bearer $CONFLUENCE_PAT" \
   -H "Content-Type: application/json" \
   -d "$CONFLUENCE_PAYLOAD")
-
+echo "response: $CONFLUENCE_RESPONSE"
 CONFLUENCE_PAGE_LINK=$(echo "$CONFLUENCE_RESPONSE" | jq -r '._links.base + ._links.webui')
-
+echo "link: $CONFLUENCE_PAGE_LINK"
 if [[ "$CONFLUENCE_PAGE_LINK" == *"null"* ]]; then
   echo "Error: Failed to create Confluence page"
   echo "Response: $CONFLUENCE_RESPONSE"
