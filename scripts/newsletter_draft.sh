@@ -103,7 +103,6 @@ CONFLUENCE_RESPONSE=$(curl -s -L -X POST "${CONFLUENCE_HOST}/rest/api/content" \
   -H "Authorization: Bearer $CONFLUENCE_PAT" \
   -H "Content-Type: application/json" \
   -d "$CONFLUENCE_PAYLOAD")
-
 CONFLUENCE_PAGE_LINK=$(echo "$CONFLUENCE_RESPONSE" | jq -r '._links.base + ._links.webui')
 
 if [[ "$CONFLUENCE_PAGE_LINK" == *"null"* ]]; then
@@ -113,3 +112,5 @@ if [[ "$CONFLUENCE_PAGE_LINK" == *"null"* ]]; then
 fi
 
 echo "Confluence wiki page created successfully: $CONFLUENCE_PAGE_LINK"
+echo -e "Payload:\n$CONFLUENCE_PAYLOAD"
+echo "Response: $CONFLUENCE_RESPONSE"
