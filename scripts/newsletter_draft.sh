@@ -7,8 +7,8 @@
 # - ARTICLE_LINKS (optional, auto-fetched by default)
 # - NEWSLETTER_LINKS (optional, auto-fetched by default)
 # - OPENROUTER_API_KEY
-# - OPENROUTER_MODEL (optional)
-# - OPENROUTER_PROMPT (optional)
+# - OPENROUTER_MODEL
+# - OPENROUTER_PROMPT
 # - CONFLUENCE_SPACE_KEY
 # - CONFLUENCE_ANCESTOR_ID
 # - CONFLUENCE_HOST
