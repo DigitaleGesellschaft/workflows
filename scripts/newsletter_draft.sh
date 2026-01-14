@@ -74,7 +74,16 @@ fi
 echo "Successfully received content from OpenRouter."
 
 # Prepare Confluence page
-DATE=$(date +"%Y-%m-%d")
+## Calculate the 3rd Wednesday of the current month (always between the 15th and 21st)
+YEAR_MONTH=$(date +"%Y-%m")
+DATE=""
+for d in {15..21}; do
+  if [ "$(date -d "$YEAR_MONTH-$d" +%u)" -eq 3 ]; then
+    DATE="$YEAR_MONTH-$d"
+    break
+  fi
+done
+
 BASE_TITLE="«Update» $DATE"
 TITLE="$BASE_TITLE"
 COUNTER=1
