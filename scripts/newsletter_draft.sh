@@ -73,7 +73,26 @@ echo "Successfully received content from OpenRouter."
 
 # Prepare Confluence page
 DATE=$(date +"%Y-%m-%d")
-TITLE="«Update» $DATE"
+BASE_TITLE="«Update» $DATE"
+TITLE="$BASE_TITLE"
+COUNTER=1
+
+CONFLUENCE_HOST="${CONFLUENCE_HOST%/}"
+
+echo "Checking if page with title '$TITLE' already exists..."
+while true; do
+  CHECK_RESPONSE=$(curl -s -L -X GET "${CONFLUENCE_HOST}/rest/api/content?title=$(echo -n "$TITLE" | jq -sRr @uri)&spaceKey=$CONFLUENCE_SPACE_KEY" \
+    -H "Authorization: Bearer $CONFLUENCE_PAT")
+  
+  if [[ $(echo "$CHECK_RESPONSE" | jq '.size') -gt 0 ]]; then
+    TITLE="$BASE_TITLE | $OPENROUTER_MODEL ($COUNTER)"
+    echo "Title already exists. Trying '$TITLE'..."
+    COUNTER=$((COUNTER + 1))
+  else
+    break
+  fi
+done
+
 BODY_HTML=$(echo "$CONTENT" | pandoc --from=markdown --to=html --wrap=none)
 
 echo "Creating new Confluence wiki page: $TITLE"
@@ -98,7 +117,6 @@ CONFLUENCE_PAYLOAD=$(jq -n \
        }
      }
    }')
-CONFLUENCE_HOST="${CONFLUENCE_HOST%/}"
 CONFLUENCE_RESPONSE=$(curl -s -L -X POST "${CONFLUENCE_HOST}/rest/api/content" \
   -H "Authorization: Bearer $CONFLUENCE_PAT" \
   -H "Content-Type: application/json" \
