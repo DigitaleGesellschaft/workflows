@@ -113,3 +113,7 @@ if [[ "$CONFLUENCE_PAGE_LINK" == *"null"* ]]; then
 fi
 
 echo "Confluence wiki page created successfully: $CONFLUENCE_PAGE_LINK"
+
+if [[ "$GITHUB_ACTIONS" == "true" ]]; then
+  echo "Erstellte Wiki-Seite: [**$TITLE**]($CONFLUENCE_PAGE_LINK)" >> "$GITHUB_STEP_SUMMARY"
+fi
