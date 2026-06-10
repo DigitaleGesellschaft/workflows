@@ -8,8 +8,6 @@ redactions = [
   path = "config.env.yaml"
 
 [settings]
-  experimental = true
-  http_retries = 3
   task.timings = true
   verbose = false
 
